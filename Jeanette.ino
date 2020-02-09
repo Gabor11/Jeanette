@@ -21,22 +21,22 @@ int transition = IDLE;
 void eval() {
   switch(state) {
     case START:
-      //evalStart();
+      //evalStart(); // reading 'isStartSignSet()'
     break;
     case ON_LINE:
-      //evalOnLine();
+      //evalOnLine(); // reading 'lineSensors()', 'distance()', 'isLaneChangeSet()', 'isStopInSight()'
     break;
     case LANE_CHANGE:
-      //evalLaneChange();
+      //evalLaneChange(); // reading 'isNewLineInSight()'
     break;
     case SEMAPHORE:
-      //evalSemaphore();
+      //evalSemaphore(); // reading 'distance()'
     break;
     case TURN:
-      //evalTurn();
+      //evalTurn(); // reading 'sideDistance()'
     break;
     case STOP:
-      //evalStop();
+      //evalStop(); // do nothing
     break;
   }
 }
@@ -47,22 +47,22 @@ void eval() {
 void out() {
   switch(state) {
     case START:
-      //outStart();
+      //outStart(); // do nothing (motor does not move)
     break;
     case ON_LINE:
-      //outOnLine();
+      //outOnLine(); // calls motor functions, sets motor PWMs according to line position
     break;
     case LANE_CHANGE:
-      //outLaneChange();
+      //outLaneChange(); // calls functions to find new lane
     break;
     case SEMAPHORE:
-      //outSemaphore();
+      //outSemaphore(); // stop motors
     break;
     case TURN:
-      //outTurn();
+      //outTurn(); // calls functions managing the turning around the obstacle
     break;
     case STOP:
-      //outStop();
+      //outStop(); // stop motors
     break;
   }
 }
