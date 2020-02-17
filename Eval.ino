@@ -24,3 +24,23 @@ void eval() {
     break;
   }
 }
+
+void evalStart() {
+  if (isStartSignSet()) {
+    transition = START_ON_LINE;
+  } else {
+    transition = IDLE;
+  }
+}
+
+void evalOnLine() {
+  
+}
+
+/**
+ * queries the sensorline whether the start-sign is set. 
+ * start-sign means: all the 5 sensors are detecting the line 
+ */
+bool isStartSignSet() {
+  return false;
+}

@@ -15,6 +15,10 @@ enum Transition {IDLE,
                  ON_LINE_STOP };
 int transition = IDLE;
 
+// steering-regulator related global variables
+double regul = 0;
+int regarr[9][20];
+
 void setup() {
 
 }
