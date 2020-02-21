@@ -75,7 +75,7 @@ void loop() {
   delay(500);
 }
 
-
+// can 
 void first_distance_measurement_is_zero() { // this function is to start the measures
   int duration, duration2 = 0;
   /*Ultrasonc measuring part*/
