@@ -1,4 +1,3 @@
-
 #define DELAYTIME 10
 
 // state related global variables (and their enums)

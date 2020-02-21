@@ -1,5 +1,35 @@
-#include "CircBuffer.h"
+
 #define TRACKED_SENSOR_STATES  22
+
+
+struct CircBuf{
+    byte *buffer;
+    byte head;
+    byte tail;
+    byte size; //of the buffer
+};
+
+int CircBufDifferential(CircBuf *cbuf);
+
+int CircBufSum(CircBuf *cbuf);
+
+void CircBufPrint(CircBuf *cbuf);
+
+int CircBufReset(CircBuf *cbuf);
+
+int CircBufEmpty(CircBuf *cbuf);
+
+int CircBufFull(CircBuf cbuf);
+
+int CircBufPut(CircBuf * cbuf, int8_t data);
+
+//int CircBufGet(CircBuf * cbuf, int8_t * data);
+
+int CircBufLast(CircBuf *cbuf, int *data);
+
+/* INITIALIZE CIRCULAR BUFFER */
+
+void CircBufInit(CircBuf *cbuf);
 
 CircBuf cbuf;
 
@@ -104,7 +134,7 @@ int CircBufLast(CircBuf *cbuf, int *data)
 
 //    printf("prevstuff: %d\n", cbuf->buffer[prevstuff]);
 
-    if(cbuf && data && !CircBufempty(cbuf))
+    if(cbuf && data && !CircBufEmpty(cbuf))
     {
         *data = cbuf->buffer[prevstuff];
         r = 0;
