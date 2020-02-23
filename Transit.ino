@@ -30,5 +30,6 @@ void transit() {
     case ON_LINE_STOP:
       state = STOP;
     break;
-  }
+    }
+    state= ON_LINE; // TODO remove for test purposes
 }
