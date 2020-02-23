@@ -1,0 +1,14 @@
+Tasks: 
+
+##Peti:
+
+#interrupt és megállás SW
+#ultrahangos szenzorok SW
+#akadályok megépítése papír
+
+Gabi:
+
+#retrospektív tömb
+#sávváltás/elágazódás implementálása
+#akadályfigyelés
+#akadálykikerülés
