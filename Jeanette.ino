@@ -50,7 +50,7 @@ long duration, duration2, distanceCm, distanceCm2;
 void setup() {
   Serial.begin(9600);// initialize serial communication via USB:
 
-  Serial.print("Testing sensors ");
+  Serial.print("Initializing pins");
   Serial.println();
 
   pinMode(TRIG_PIN, OUTPUT); // initialize pin mode for right sensors
@@ -72,7 +72,7 @@ void loop() {
  if (millis() - shorttasktimestamp    >= SHORTTASKTIME ) {
     shorttasktimestamp = shorttasktimestamp + SHORTTASKTIME ;
     transit();
-     eval(); 
+    eval(); 
     out();  
   }
   

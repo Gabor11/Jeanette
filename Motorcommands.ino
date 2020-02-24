@@ -12,80 +12,59 @@
 
 AF_DCMotor left_motor(3); // left motor
 AF_DCMotor right_motor(2); // right motor
+AF_DCMotor *mtr_ptr; // motor pointer
 
-void motor_control(int motor_identific, int motor_supercontrol);
+// controls the actually set motor in 'mtr_ptr' - do not call it, unless it is set correctly
+void motor_control(int regul);
+void LeftMotorControl(int regul);
+void RightMotorControl(int regul);
 
-void motor_control(int motor_identific, int motor_supercontrol) {
-
-  if (motor_identific == LEFTMOTOR) {
-    switch (motor_supercontrol) {
-      case 1: // zero
-        left_motor.setSpeed(ZERO);
-        left_motor.run(BACKWARD);
-        break;
-      case 2: // forward_1
-        left_motor.setSpeed(FIRSTSPEED);
-        left_motor.run(FORWARD);
-        break;
-      case 3: // forward_2
-        left_motor.setSpeed(SECONDSPEED);
-        left_motor.run(FORWARD);
-        break;
-      case 4:// forward_3
-        left_motor.setSpeed(THIRDSPEED);
-        left_motor.run(FORWARD);
-        break;
-      case 5:// forward_4
-        left_motor.setSpeed(FORTHSPEED);
-        left_motor.run(FORWARD); 
-        break;  
-      case 6: //reverse_2
-        left_motor.setSpeed(SECONDSPEED);
-        left_motor.run(BACKWARD);
-        break;
-      case 7: //reverse_1:
-        left_motor.setSpeed(FIRSTSPEED);
-        left_motor.run(BACKWARD);
-        break;
-      default:
-        left_motor.setSpeed(FIRSTSPEED);
-        left_motor.run(FORWARD);
-        break;
-    }
-  } else {
-    switch (motor_supercontrol) {
-      case 1: // zero
-        right_motor.setSpeed(FORTHSPEED);
-        right_motor.run(FORWARD); 
-        break;
-      case 2: // forward_1
-        right_motor.setSpeed(THIRDSPEED);
-        right_motor.run(FORWARD);
-        break;
-      case 3: // forward_2
-        right_motor.setSpeed(SECONDSPEED);
-        right_motor.run(FORWARD);
-        break;
-      case 4:// forward_3
-        right_motor.setSpeed(FIRSTSPEED);
-        right_motor.run(FORWARD);
-        break;
-      case 5:// forward_4
-        right_motor.setSpeed(ZERO);
-        right_motor.run(BACKWARD);
-        break;  
-      case 6: //reverse_2
-        right_motor.setSpeed(SECONDSPEED);
-        right_motor.run(BACKWARD);
-        break;
-      case 7: //reverse_1:
-        right_motor.setSpeed(FIRSTSPEED);
-        right_motor.run(BACKWARD);
-        break;
-      default:
-        right_motor.setSpeed(FIRSTSPEED);
-        right_motor.run(FORWARD);
-        break;
-    }
+void motor_control(int regul) {
+  switch (regul) {
+    case 1: // zero
+      mtr_ptr->setSpeed(ZERO);
+      mtr_ptr->run(BACKWARD);
+      break;
+    case 2: // forward_1
+      mtr_ptr->setSpeed(FIRSTSPEED);
+      mtr_ptr->run(FORWARD);
+      break;
+    case 3: // forward_2
+      mtr_ptr->setSpeed(SECONDSPEED);
+      mtr_ptr->run(FORWARD);
+      break;
+    case 4:// forward_3
+      mtr_ptr->setSpeed(THIRDSPEED);
+      mtr_ptr->run(FORWARD);
+      break;
+    case 5:// forward_4
+      mtr_ptr->setSpeed(FORTHSPEED);
+      mtr_ptr->run(FORWARD); 
+      break;  
+    case 6: //reverse_2
+      mtr_ptr->setSpeed(SECONDSPEED);
+      mtr_ptr->run(BACKWARD);
+      break;
+    case 7: //reverse_1:
+      mtr_ptr->setSpeed(FIRSTSPEED);
+      mtr_ptr->run(BACKWARD);
+      break;
+    default:
+      mtr_ptr->setSpeed(FIRSTSPEED);
+      mtr_ptr->run(FORWARD);
+      break;
   }
+}
+
+void LeftMotorControl(int regul) {
+  mtr_ptr = &left_motor;
+  motor_control(regul);
+}
+
+void RightMotorControl(int regul) {
+  mtr_ptr = &right_motor;
+  if (regul < 6) {
+    regul = 6 - regul;
+  }
+  motor_control(regul);
 }

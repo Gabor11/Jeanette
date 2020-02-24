@@ -28,6 +28,6 @@ void out() {
 }
 
 void outOnLine() {
-  motor_control(LEFTMOTOR, regul);
-  motor_control(RIGHTMOTOR, regul);
+  LeftMotorControl(regul);
+  RightMotorControl(regul);
 }
