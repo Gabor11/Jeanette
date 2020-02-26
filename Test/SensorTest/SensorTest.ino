@@ -5,6 +5,10 @@ const int ECHO_PIN = 23;
 // Initializing left sensor arduino pins
 const int TRIG_PIN2 = 24;
 const int ECHO_PIN2 = 25;
+// Initializing middle sensor arduino pins
+const int TRIG_PIN3 = 26;
+const int ECHO_PIN3 = 27;
+
 
 //Initializing infrasensors for line following
 const int LINESENS0 = 40;
@@ -18,7 +22,7 @@ const byte interruptPin1 = 18;
 const byte interruptPin2 = 19;
 
 //Initializing variables for distance measurement
-long duration, duration2, distanceCm, distanceCm2;
+long durationRight, durationLeft, durationMid, distanceCmRight, distanceCmLeft, distanceCmMid;
 
 
 void setup() {
@@ -69,15 +73,17 @@ void loop() {
   Serial.println();
   distance_measurement();
   Serial.print(" right distance : ");
-  Serial.print(distanceCm);
+  Serial.print(distanceCmRight);
   Serial.print(" left distance : ");
-  Serial.print(distanceCm2);
+  Serial.print(distanceCmLeft);
+  Serial.print(" middle distance : ");
+  Serial.print(distanceCmMid);
   delay(500);
 }
 
 // can 
 void first_distance_measurement_is_zero() { // this function is to start the measures
-  int duration, duration2 = 0;
+  int durationRight, durationLeft, durationMid = 0;
   /*Ultrasonc measuring part*/
   //right sensor
   digitalWrite(TRIG_PIN, LOW);
@@ -85,7 +91,7 @@ void first_distance_measurement_is_zero() { // this function is to start the mea
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
-  duration = pulseIn(ECHO_PIN, HIGH);
+  durationRight = pulseIn(ECHO_PIN, HIGH);
   delay(1);
   // left sensor
   digitalWrite(TRIG_PIN2, LOW);
@@ -93,7 +99,15 @@ void first_distance_measurement_is_zero() { // this function is to start the mea
   digitalWrite(TRIG_PIN2, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN2, LOW);
-  duration2 = pulseIn(ECHO_PIN2, HIGH);
+  durationLeft = pulseIn(ECHO_PIN2, HIGH);
+  delay(1);
+  // middle sensor
+  digitalWrite(TRIG_PIN3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN3, LOW);
+  durationMid = pulseIn(ECHO_PIN3, HIGH);
 }
 
 void distance_measurement() {
@@ -103,7 +117,7 @@ void distance_measurement() {
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
-  duration = pulseIn(ECHO_PIN, HIGH);
+  durationRight = pulseIn(ECHO_PIN, HIGH);
   delay(1);
   // left sensor
   digitalWrite(TRIG_PIN2, LOW);
@@ -111,11 +125,20 @@ void distance_measurement() {
   digitalWrite(TRIG_PIN2, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN2, LOW);
-  duration2 = pulseIn(ECHO_PIN2, HIGH);
+  durationLeft = pulseIn(ECHO_PIN2, HIGH);
+  delay(1);
+  // left sensor
+  digitalWrite(TRIG_PIN3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN3, LOW);
+  durationMid = pulseIn(ECHO_PIN3, HIGH);
 
   // convert the time into a distance values
-  distanceCm = duration / 29.1 / 2 ; //right
-  distanceCm2 = duration2 / 29.1 / 2 ; //left
+  distanceCmRight = durationRight / 29.1 / 2 ; //right
+  distanceCmLeft = durationLeft / 29.1 / 2 ; //left
+  distanceCmMid = durationMid / 29.1 / 2 ; //left
 }
 
 void interruptA() {
