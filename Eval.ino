@@ -6,11 +6,9 @@ void evalOnLine();
 char calculateRegulator();
 
 void eval() {
-
-
   switch (state) {
     case START:
-      //evalStart(); // reading 'isStartSignSet()'
+      evalStart(); // reading 'isStartSignSet()'
       break;
     case ON_LINE:
       evalOnLine(); // reading 'lineSensors()', 'distance()', 'isLaneChangeSet()', 'isStopInSight()'
@@ -30,9 +28,26 @@ void eval() {
   }
 }
 
+/**
+   queries the sensorline whether the start-sign is set.
+   start-sign means: all the 5 sensors are detecting the line
+*/
+bool isStartSignSet() {
+  int i = 0;
+  readingLineSensors();
+  for (i = 0; i < 5; i++) {
+    if (regarr[i] != 1)
+      break;
+  }
+  if (i == 5)
+    return true;
+  return false;
+}
+
 void evalStart() {
   if (isStartSignSet()) {
     transition = START_ON_LINE;
+    Serial.println("Start sign found");
   } else {
     transition = IDLE;
   }
@@ -45,29 +60,13 @@ void readingLineSensors() {
   regarr[3] = digitalRead(LINESENS3);
   regarr[4] = digitalRead(LINESENS4);
 }
+
 void evalOnLine() {
   readingLineSensors();
   regul = calculateRegulatorValue();
-
-/*
-  Serial.print(regarr[0]);
-  Serial.print(regarr[1]);
-  Serial.print(regarr[2]);
-  Serial.print(regarr[3]);
-  Serial.print(regarr[4]);
-  Serial.println();
-*/
-
-
 }
 
-/**
-   queries the sensorline whether the start-sign is set.
-   start-sign means: all the 5 sensors are detecting the line
-*/
-bool isStartSignSet() {
-  return false;
-}
+
 char calculateRegulatorValue(){
   if (regarr[0] == 1) {
     return 1;
