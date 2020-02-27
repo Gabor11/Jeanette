@@ -9,7 +9,6 @@ const int ECHO_PIN2 = 25;
 const int TRIG_PIN3 = 26;
 const int ECHO_PIN3 = 27;
 
-
 //Initializing infrasensors for line following
 const int LINESENS0 = 40;
 const int LINESENS1 = 41;
@@ -36,6 +35,8 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
   pinMode(TRIG_PIN2, OUTPUT); // initialize pin mode for left sensors
   pinMode(ECHO_PIN2, INPUT);
+  pinMode(TRIG_PIN3, OUTPUT); // initialize pin mode for left sensors
+  pinMode(ECHO_PIN3, INPUT);
 
   pinMode(LINESENS0, INPUT);
   pinMode(LINESENS1, INPUT);

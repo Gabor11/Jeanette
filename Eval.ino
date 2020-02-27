@@ -61,6 +61,8 @@ void readingLineSensors() {
   regarr[4] = digitalRead(LINESENS4);
 }
 
+
+
 void evalOnLine() {
   readingLineSensors();
   regul = calculateRegulatorValue();
