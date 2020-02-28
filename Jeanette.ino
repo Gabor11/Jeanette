@@ -17,7 +17,7 @@ int transition = IDLE;
 
 // steering-regulator related global variables
 double regul = 0;
-int regarr[5];
+int8_t regarr[5];
 //timestamps for avoid delays
 unsigned long shorttasktimestamp = 0;
 unsigned long longtimestamp = 0;
