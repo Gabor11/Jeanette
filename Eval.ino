@@ -1,16 +1,13 @@
 
-/*  eval(): from this function those functions are called that evaluate sensor input.
-    in these functions the 'transition' variable should be set (if needed).
-*/
 void evalOnLine();
 char calculateRegulator();
-
+/** eval(): from this function those functions are called that evaluate sensor input.
+ *  in these functions the 'transition' variable should be set (if needed).
+ */
 void eval() {
-
-
   switch (state) {
     case START:
-      //evalStart(); // reading 'isStartSignSet()'
+      evalStart(); // reading 'isStartSignSet()'
       break;
     case ON_LINE:
       evalOnLine(); // reading 'lineSensors()', 'distance()', 'isLaneChangeSet()', 'isStopInSight()'
@@ -30,9 +27,26 @@ void eval() {
   }
 }
 
+/**
+ * queries the sensorline whether the start-sign is set.
+ * start-sign means: all the 5 sensors are detecting the line
+ */
+bool isStartSignSet() {
+  int i = 0;
+  readingLineSensors();
+  for (i = 0; i < 5; i++) {
+    if (regarr[i] != 1)
+      break;
+  }
+  if (i == 5)
+    return true;
+  return false;
+}
+
 void evalStart() {
   if (isStartSignSet()) {
     transition = START_ON_LINE;
+    Serial.println("Start sign found");
   } else {
     transition = IDLE;
   }
@@ -45,29 +59,7 @@ void readingLineSensors() {
   regarr[3] = digitalRead(LINESENS3);
   regarr[4] = digitalRead(LINESENS4);
 }
-void evalOnLine() {
-  readingLineSensors();
-  regul = calculateRegulatorValue();
 
-/*
-  Serial.print(regarr[0]);
-  Serial.print(regarr[1]);
-  Serial.print(regarr[2]);
-  Serial.print(regarr[3]);
-  Serial.print(regarr[4]);
-  Serial.println();
-*/
-
-
-}
-
-/**
-   queries the sensorline whether the start-sign is set.
-   start-sign means: all the 5 sensors are detecting the line
-*/
-bool isStartSignSet() {
-  return false;
-}
 char calculateRegulatorValue(){
   if (regarr[0] == 1) {
     return 1;
@@ -80,4 +72,102 @@ char calculateRegulatorValue(){
   } else if (regarr[4] == 1) {
     return 5;
   }
+}
+
+void first_distance_measurement_is_zero() { // this function is to start the measures
+  int durationRight, durationLeft, durationMid = 0;
+  /*Ultrasonc measuring part*/
+  //right sensor
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  durationRight = pulseIn(ECHO_PIN, HIGH);
+  delay(1);
+  // left sensor
+  digitalWrite(TRIG_PIN2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN2, LOW);
+  durationLeft = pulseIn(ECHO_PIN2, HIGH);
+  delay(1);
+  // middle sensor
+  digitalWrite(TRIG_PIN3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN3, LOW);
+  durationMid = pulseIn(ECHO_PIN3, HIGH);
+}
+
+void measureDistance() {
+  //right sensor
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  durationRight = pulseIn(ECHO_PIN, HIGH);
+  delay(1);
+  // left sensor
+  digitalWrite(TRIG_PIN2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN2, LOW);
+  durationLeft = pulseIn(ECHO_PIN2, HIGH);
+  delay(1);
+  // left sensor
+  digitalWrite(TRIG_PIN3, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN3, LOW);
+  durationMid = pulseIn(ECHO_PIN3, HIGH);
+
+  // convert the time into a distance values
+  distanceCmRight = durationRight / 29.1 / 2 ; //right
+  distanceCmLeft = durationLeft / 29.1 / 2 ; //left
+  distanceCmMid = durationMid / 29.1 / 2 ; //left
+}
+
+/**
+ * checks whether there is a sensor in a HIGH state
+ * indicating the line **it should be called after 'readingLineSensors()'**
+ */
+bool isLineInSight() {
+  int i = 0;
+  for (i = 0; i < 5; i++) {
+    if (regarr[i] == HIGH) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * evaluates whether the semaphor or the obstacle is in sight
+ */
+void evaluateDistanceMeasurement() {
+  if (distanceCmMid < 10) {
+    if (isLineInSight()) {
+      transition = ON_LINE_SEMAPHORE;
+    } else {
+      transition = ON_LINE_TURN;
+    }
+  }
+}
+
+/**
+ * function to be called in 'ON_LINE' state
+ * the other functions, called in its block, 
+ * deal with reading and evaluating input in this state
+ */
+void evalOnLine() {
+  readingLineSensors();
+  regul = calculateRegulatorValue();
+  measureDistance();
+  evaluateDistanceMeasurement(); // sets 'transition'
 }

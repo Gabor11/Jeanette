@@ -31,5 +31,5 @@ void transit() {
       state = STOP;
     break;
     }
-    state= ON_LINE; // TODO remove for test purposes
+    //state= START; // for test purposes TODO: remove 
 }
