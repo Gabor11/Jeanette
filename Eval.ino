@@ -53,23 +53,23 @@ void evalStart() {
 }
 
 void readingLineSensors() {
-  regarr[0] = digitalRead(LINESENS0);
-  regarr[1] = digitalRead(LINESENS1);
-  regarr[2] = digitalRead(LINESENS2);
-  regarr[3] = digitalRead(LINESENS3);
-  regarr[4] = digitalRead(LINESENS4);
+  cbuf->buffer->regarr[0] = digitalRead(LINESENS0);
+  cbuf->buffer->regarr[1] = digitalRead(LINESENS1);
+  cbuf->buffer->regarr[2] = digitalRead(LINESENS2);
+  cbuf->buffer->regarr[3] = digitalRead(LINESENS3);
+  cbuf->buffer->regarr[4] = digitalRead(LINESENS4);
 }
 
 char calculateRegulatorValue(){
-  if (regarr[0] == 1) {
+  if (cbuf->buffer->regarr[0] == 1) {
     return 1;
-  } else if (regarr[1] == 1) {
+  } else if (cbuf->buffer->regarr[1] == 1) {
     return 2;
-  } else if (regarr[2] == 1) {
+  } else if (cbuf->buffer->regarr[2] == 1) {
     return 3;
-  } else if (regarr[3] == 1) {
+  } else if (cbuf->buffer->regarr[3] == 1) {
     return 4;
-  } else if (regarr[4] == 1) {
+  } else if (cbuf->buffer->regarr[4] == 1) {
     return 5;
   }
 }
@@ -140,7 +140,7 @@ void measureDistance() {
 bool isLineInSight() {
   int i = 0;
   for (i = 0; i < 5; i++) {
-    if (regarr[i] == HIGH) {
+    if (cbuf->buffer->regarr[i] == HIGH) {
       return true;
     }
   }
@@ -167,7 +167,7 @@ void evaluateDistanceMeasurement() {
  */
 void evalOnLine() {
   readingLineSensors();
-  regul = calculateRegulatorValue();
+  CircBufPut(&cbuf, calculateRegulatorValue());
   measureDistance();
   evaluateDistanceMeasurement(); // sets 'transition'
 }

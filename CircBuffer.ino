@@ -10,8 +10,8 @@ struct CircBuf{
 };
 
 struct SensorState{
-  byte regulatorValue;
-  int regarr[5];
+  int8_t regulatorValue;
+  int8_t regarr[5];
 };
 
 int CircBufDifferential(struct CircBuf *cbuf);
@@ -94,7 +94,7 @@ bool CircBufFull(struct CircBuf cbuf)
     // We determine "full" case by head being one position behind the tail
     // Note that this means we are wasting one space in the buffer!
     // Instead, you could have an "empty" flag and determine buffer full that way
-    return ((cbuf.head + 1) % cbuf.size) == cbuf.tail;
+    return ((cbuf->head + 1) % cbuf->size) == cbuf->tail;
 }
 
 int CircBufPut(struct CircBuf * cbuf, int8_t regulatorValue, int8_t regarr[5])

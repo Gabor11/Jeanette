@@ -32,8 +32,8 @@ void out() {
 }
 
 void outOnLine() {
-  LeftMotorControl(regul);
-  RightMotorControl(regul);
+  LeftMotorControl(cbuf->buffer->regulatorValue);
+  RightMotorControl(cbuf->buffer->regulatorValue);
 }
 
 void interruptA() {
