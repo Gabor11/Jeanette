@@ -26,17 +26,15 @@ bool CircBufEmpty(struct CircBuf *cbuf);
 
 bool CircBufFull(struct CircBuf cbuf);
 
-int CircBufPut(struct CircBuf * cbuf, int8_t data);
+int CircBufPut(struct CircBuf * cbuf, int8_t regulatorValue, int8_t regarr[5]);
 
 //int CircBufGet(struct CircBuf * cbuf, int8_t * data);
 
-int CircBufLast(struct CircBuf *cbuf, int *data);
+int CircBufLast(struct CircBuf *cbuf,  struct SensorState *data);
 
 /* INITIALIZE CIRCULAR BUFFER */
 
 void CircBufInit(struct CircBuf *cbuf);
-
-CircBuf cbuf;
 
 int CircBufDifferential(struct CircBuf *cbuf)
 {
@@ -89,7 +87,7 @@ bool CircBufEmpty(struct CircBuf *cbuf)
     return (cbuf->head == cbuf->tail);
 }
 
-bool CircBufFull(struct CircBuf cbuf)
+bool CircBufFull(struct CircBuf *cbuf)
 {
     // We determine "full" case by head being one position behind the tail
     // Note that this means we are wasting one space in the buffer!
@@ -133,7 +131,7 @@ int CircBufPut(struct CircBuf * cbuf, int8_t regulatorValue, int8_t regarr[5])
 //    return r;
 //}
 
-int CircBufLast(struct CircBuf *cbuf, int8_t *data)
+int CircBufLast(struct CircBuf *cbuf, struct SensorState *data)
 {
     int r = -1;
     int prevstuff;
@@ -144,7 +142,7 @@ int CircBufLast(struct CircBuf *cbuf, int8_t *data)
 
     if(cbuf && data && !CircBufEmpty(cbuf))
     {
-        *data = cbuf->buffer[prevstuff].regulatorValue;
+        *data = cbuf->buffer[prevstuff];
         r = 0;
 //        printf("Im here :) & the data is: %d\n", *data);
     }
