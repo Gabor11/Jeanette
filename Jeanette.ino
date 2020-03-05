@@ -65,7 +65,7 @@ void setup() {
   
   attachInterrupt(digitalPinToInterrupt(interruptPin1), interruptA, RISING);
   attachInterrupt(digitalPinToInterrupt(interruptPin2), interruptB, RISING);
-  first_distance_measurement_is_zero();
+
 }
 
 void loop() {

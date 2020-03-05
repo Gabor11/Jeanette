@@ -79,34 +79,6 @@ char calculateRegulatorValue(int8_t regarr[5]){
   }
 }
 
-void first_distance_measurement_is_zero() { // this function is to start the measures
-  int durationRight, durationLeft, durationMid = 0;
-  /*Ultrasonc measuring part*/
-  //right sensor
-  digitalWrite(TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-  durationRight = pulseIn(ECHO_PIN, HIGH);
-  delay(1);
-  // left sensor
-  digitalWrite(TRIG_PIN2, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN2, LOW);
-  durationLeft = pulseIn(ECHO_PIN2, HIGH);
-  delay(1);
-  // middle sensor
-  digitalWrite(TRIG_PIN3, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN3, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN3, LOW);
-  durationMid = pulseIn(ECHO_PIN3, HIGH);
-}
-
 void measureDistance() {
   //right sensor
   digitalWrite(TRIG_PIN, LOW);
