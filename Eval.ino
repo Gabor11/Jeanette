@@ -1,6 +1,9 @@
 
 void evalOnLine();
 char calculateRegulator();
+
+int8_t regarr[5];
+struct CircBuf cbuf;
 /** eval(): from this function those functions are called that evaluate sensor input.
  *  in these functions the 'transition' variable should be set (if needed).
  */
@@ -58,9 +61,11 @@ void readingLineSensors() {
   regarr[2] = digitalRead(LINESENS2);
   regarr[3] = digitalRead(LINESENS3);
   regarr[4] = digitalRead(LINESENS4);
+
+  CircBufPut(&cbuf, calculateRegulatorValue(regarr), regarr);
 }
 
-char calculateRegulatorValue(){
+char calculateRegulatorValue(int8_t regarr[5]){
   if (regarr[0] == 1) {
     return 1;
   } else if (regarr[1] == 1) {
@@ -138,9 +143,11 @@ void measureDistance() {
  * indicating the line **it should be called after 'readingLineSensors()'**
  */
 bool isLineInSight() {
+  struct SensorState *bufptr;
+  CircBufLast(&cbuf, bufptr);
   int i = 0;
   for (i = 0; i < 5; i++) {
-    if (regarr[i] == HIGH) {
+    if (bufptr->regarr[i] == HIGH) {
       return true;
     }
   }
@@ -167,7 +174,6 @@ void evaluateDistanceMeasurement() {
  */
 void evalOnLine() {
   readingLineSensors();
-  regul = calculateRegulatorValue();
   measureDistance();
   evaluateDistanceMeasurement(); // sets 'transition'
 }
