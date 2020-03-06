@@ -2,11 +2,13 @@ Tasks:
 
 ##Peti:
 
+# rákérdezni a vonal és a sávváltás viszonyára
 #interrupt és megállás SW
 #ultrahangos szenzorok SW
 #akadályok megépítése papír
+#manõverkatalógus
 
-Gabi:
+##Gabi:
 
 #retrospektív tömb
 #sávváltás/elágazódás implementálása
