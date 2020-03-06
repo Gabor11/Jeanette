@@ -63,6 +63,16 @@ void readingLineSensors() {
   regarr[4] = digitalRead(LINESENS4);
 
   CircBufPut(&cbuf, calculateRegulatorValue(regarr), regarr);
+  Serial.print(regarr[0]); 
+  Serial.print("; ");
+  Serial.print(regarr[1]);
+    Serial.print("; ");
+  Serial.print(regarr[2]);
+    Serial.print("; ");
+  Serial.print(regarr[3]);
+    Serial.print("; ");
+  Serial.print(regarr[4]);
+  Serial.println();
 }
 
 char calculateRegulatorValue(int8_t regarr[5]){
@@ -173,7 +183,10 @@ void evaluateDistanceMeasurement() {
  * deal with reading and evaluating input in this state
  */
 void evalOnLine() {
+  Serial.println("readingLineSensors");
   readingLineSensors();
+  Serial.println("measureDistance");
   measureDistance();
+  Serial.println("evaluateDistanceMeasurement");
   evaluateDistanceMeasurement(); // sets 'transition'
 }

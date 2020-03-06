@@ -1,4 +1,4 @@
-#define SHORTTASKTIME 10
+#define SHORTTASKTIME 200
 #define LONGTASKTIME  200
 // state related global variables (and their enums)
 enum State {START, ON_LINE, LANE_CHANGE, SEMAPHORE, TURN, STOP};
@@ -19,7 +19,6 @@ int transition = IDLE;
 unsigned long shorttasktimestamp = 0;
 unsigned long longtimestamp = 0;
 
-
 // Initializing right sensor arduino pins
 const int TRIG_PIN = 22;
 const int ECHO_PIN = 23;
@@ -38,8 +37,8 @@ const int LINESENS3 = 43;
 const int LINESENS4 = 44;
 
 //Initializing collision-interrupt pins
-const byte interruptPin1 = 18;
-const byte interruptPin2 = 19;
+const byte INTEPIN1 = 18;
+const byte INTEPIN2 = 19;
 
 //Initializing variables for distance measurement
 long durationRight, durationLeft, durationMid, distanceCmRight, distanceCmLeft, distanceCmMid;
@@ -63,8 +62,8 @@ void setup() {
   pinMode(LINESENS3, INPUT);
   pinMode(LINESENS4, INPUT);
   
-  attachInterrupt(digitalPinToInterrupt(interruptPin1), interruptA, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPin2), interruptB, RISING);
+  attachInterrupt(digitalPinToInterrupt(INTEPIN1), interruptA, RISING);
+  attachInterrupt(digitalPinToInterrupt(INTEPIN2), interruptB, RISING);
   first_distance_measurement_is_zero();
 }
 
@@ -74,7 +73,8 @@ void loop() {
     shorttasktimestamp = shorttasktimestamp + SHORTTASKTIME ;
     transit();
     eval(); 
-    out();  
+    out();
+    Serial.println(state);
   }
   
 // long task
