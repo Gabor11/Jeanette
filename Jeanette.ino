@@ -62,7 +62,7 @@ void setup() {
   pinMode(LINESENS2, INPUT);
   pinMode(LINESENS3, INPUT);
   pinMode(LINESENS4, INPUT);
-  
+
   attachInterrupt(digitalPinToInterrupt(interruptPin1), interruptA, RISING);
   attachInterrupt(digitalPinToInterrupt(interruptPin2), interruptB, RISING);
 
@@ -70,16 +70,16 @@ void setup() {
 
 void loop() {
   // short task
- if (millis() - shorttasktimestamp >= SHORTTASKTIME ) {
+  if (millis() - shorttasktimestamp >= SHORTTASKTIME ) {
     shorttasktimestamp = shorttasktimestamp + SHORTTASKTIME ;
     transit();
-    eval(); 
-    out();  
+    eval();
+    out();
   }
-  
-// long task
-if (millis() - longtimestamp   >= LONGTASKTIME ) {
+
+  // long task
+  if (millis() - longtimestamp   >= LONGTASKTIME ) {
     longtimestamp = longtimestamp + LONGTASKTIME ;
-    
+
   }
 }
