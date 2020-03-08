@@ -11,7 +11,7 @@ void out() {
       Serial.println("START");
     break;
     case ON_LINE:
-      //outOnLine(); // calls motor functions, sets motor PWMs according to line position
+      outOnLine(); // calls motor functions, sets motor PWMs according to line position
       Serial.println("ON_LINE");
     break;
     case LANE_CHANGE:

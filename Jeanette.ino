@@ -1,5 +1,5 @@
 #define SHORTTASKTIME 10
-#define LONGTASKTIME  200
+#define LONGTASKTIME  100
 // state related global variables (and their enums)
 enum State {START, ON_LINE, LANE_CHANGE, SEMAPHORE, TURN, STOP};
 int state = START;
