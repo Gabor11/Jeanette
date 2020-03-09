@@ -15,9 +15,6 @@ enum Transition {IDLE,
                 };
 int transition = IDLE;
 
-// steering-regulator related global variables
-double regul = 0;
-int regarr[5];
 //timestamps for avoid delays
 unsigned long shorttasktimestamp = 0;
 unsigned long longtimestamp = 0;
@@ -65,23 +62,27 @@ void setup() {
   pinMode(LINESENS2, INPUT);
   pinMode(LINESENS3, INPUT);
   pinMode(LINESENS4, INPUT);
-  
+
   attachInterrupt(digitalPinToInterrupt(interruptPin1), interruptA, RISING);
   attachInterrupt(digitalPinToInterrupt(interruptPin2), interruptB, RISING);
-  first_distance_measurement_is_zero();
+
 }
 
 void loop() {
   // short task
- if (millis() - shorttasktimestamp >= SHORTTASKTIME ) {
+  if (millis() - shorttasktimestamp >= SHORTTASKTIME ) {
     shorttasktimestamp = shorttasktimestamp + SHORTTASKTIME ;
     transit();
-    eval(); 
-    out();  
+    eval();
+    out();
   }
-  
-// long task
-if (millis() - longtimestamp   >= LONGTASKTIME ) {
+
+  // long task
+  if (millis() - longtimestamp   >= LONGTASKTIME ) {
     longtimestamp = longtimestamp + LONGTASKTIME ;
+<<<<<<< HEAD
+=======
+
+>>>>>>> Peti_develop
   }
 }

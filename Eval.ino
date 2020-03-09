@@ -1,6 +1,9 @@
 
 void evalOnLine();
 char calculateRegulator();
+
+int8_t regarr[5];
+struct CircBuf cbuf;
 /** eval(): from this function those functions are called that evaluate sensor input.
  *  in these functions the 'transition' variable should be set (if needed).
  */
@@ -58,9 +61,11 @@ void readingLineSensors() {
   regarr[2] = digitalRead(LINESENS2);
   regarr[3] = digitalRead(LINESENS3);
   regarr[4] = digitalRead(LINESENS4);
+
+  CircBufPut(&cbuf, calculateRegulatorValue(regarr), regarr);
 }
 
-char calculateRegulatorValue(){
+char calculateRegulatorValue(int8_t regarr[5]){
   if (regarr[0] == 1) {
     return 1;
   } else if (regarr[1] == 1) {
@@ -72,34 +77,6 @@ char calculateRegulatorValue(){
   } else if (regarr[4] == 1) {
     return 5;
   }
-}
-
-void first_distance_measurement_is_zero() { // this function is to start the measures
-  int durationRight, durationLeft, durationMid = 0;
-  /*Ultrasonc measuring part*/
-  //right sensor
-  digitalWrite(TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-  durationRight = pulseIn(ECHO_PIN, HIGH);
-  delay(1);
-  // left sensor
-  digitalWrite(TRIG_PIN2, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN2, LOW);
-  durationLeft = pulseIn(ECHO_PIN2, HIGH);
-  delay(1);
-  // middle sensor
-  digitalWrite(TRIG_PIN3, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN3, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN3, LOW);
-  durationMid = pulseIn(ECHO_PIN3, HIGH);
 }
 
 void measureDistance() {
@@ -138,9 +115,11 @@ void measureDistance() {
  * indicating the line **it should be called after 'readingLineSensors()'**
  */
 bool isLineInSight() {
+  struct SensorState *bufptr;
+  CircBufLast(&cbuf, bufptr);
   int i = 0;
   for (i = 0; i < 5; i++) {
-    if (regarr[i] == HIGH) {
+    if (bufptr->regarr[i] == HIGH) {
       return true;
     }
   }
@@ -167,7 +146,6 @@ void evaluateDistanceMeasurement() {
  */
 void evalOnLine() {
   readingLineSensors();
-  regul = calculateRegulatorValue();
   measureDistance();
   evaluateDistanceMeasurement(); // sets 'transition'
 }

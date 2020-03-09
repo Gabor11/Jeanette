@@ -32,8 +32,10 @@ void out() {
 }
 
 void outOnLine() {
-  LeftMotorControl(regul);
-  RightMotorControl(regul);
+  struct SensorState *bufptr;
+  CircBufLast(&cbuf, bufptr);
+  LeftMotorControl(bufptr->regulatorValue);
+  RightMotorControl(bufptr->regulatorValue);
 }
 
 void interruptA() {

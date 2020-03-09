@@ -3,45 +3,48 @@
 
 
 struct CircBuf{
-    byte *buffer;
+    struct SensorState *buffer;
     byte head;
     byte tail;
     byte size; //of the buffer
 };
 
-int CircBufDifferential(CircBuf *cbuf);
+struct SensorState{
+  int8_t regulatorValue;
+  int8_t regarr[5];
+};
 
-int CircBufSum(CircBuf *cbuf);
+int CircBufDifferential(struct CircBuf *cbuf);
 
-void CircBufPrint(CircBuf *cbuf);
+int CircBufSum(struct CircBuf *cbuf);
 
-int CircBufReset(CircBuf *cbuf);
+void CircBufPrint(struct CircBuf *cbuf);
 
-int CircBufEmpty(CircBuf *cbuf);
+int CircBufReset(struct CircBuf *cbuf);
 
-int CircBufFull(CircBuf cbuf);
+bool CircBufEmpty(struct CircBuf *cbuf);
 
-int CircBufPut(CircBuf * cbuf, int8_t data);
+bool CircBufFull(struct CircBuf cbuf);
 
-//int CircBufGet(CircBuf * cbuf, int8_t * data);
+int CircBufPut(struct CircBuf * cbuf, int8_t regulatorValue, int8_t regarr[5]);
 
-int CircBufLast(CircBuf *cbuf, int *data);
+//int CircBufGet(struct CircBuf * cbuf, int8_t * data);
+
+int CircBufLast(struct CircBuf *cbuf,  struct SensorState *data);
 
 /* INITIALIZE CIRCULAR BUFFER */
 
-void CircBufInit(CircBuf *cbuf);
+void CircBufInit(struct CircBuf *cbuf);
 
-CircBuf cbuf;
-
-int CircBufDifferential(CircBuf *cbuf)
+int CircBufDifferential(struct CircBuf *cbuf)
 {
   int previous = (cbuf->head + TRACKED_SENSOR_STATES - 1) % cbuf->size;
   int beforeprevious = (cbuf->head + TRACKED_SENSOR_STATES - 2) % cbuf->size;
 
-  return cbuf->buffer[previous] - cbuf->buffer[beforeprevious];
+  return cbuf->buffer[previous].regulatorValue - cbuf->buffer[beforeprevious].regulatorValue;
 }
 
-int CircBufSum(CircBuf *cbuf)
+int CircBufSum(struct CircBuf *cbuf)
 {
     int position = 0;
     int sum = 0;
@@ -50,22 +53,22 @@ int CircBufSum(CircBuf *cbuf)
       position = (cbuf->tail + i) % cbuf->size;
       if (position == cbuf->head)
         break;
-        sum += cbuf->buffer[position];
+        sum += cbuf->buffer[position].regulatorValue;
     }
     return sum;
 }
 
-void CircBufPrint(CircBuf *cbuf)
+void CircBufPrint(struct CircBuf *cbuf)
 {
     int real_place;
 
     for (int i = 0; i < TRACKED_SENSOR_STATES - 1; i++) {
       real_place = (cbuf->tail + i) % cbuf->size;
-//        printf("buf_data%d: %d\n", i, cbuf->buffer[real_place]);
+//        printf("buf_data%d: %d\n", i, cbuf->buffer[real_place].regulatorValue);
     }
 }
 
-int CircBufReset(CircBuf *cbuf)
+int CircBufReset(struct CircBuf *cbuf)
 {
     int r = -1;
 
@@ -78,26 +81,29 @@ int CircBufReset(CircBuf *cbuf)
     return r;
 }
 
-int CircBufEmpty(CircBuf *cbuf)
+bool CircBufEmpty(struct CircBuf *cbuf)
 {
     // We define empty as head == tail
     return (cbuf->head == cbuf->tail);
 }
 
-int CircBufFull(CircBuf cbuf)
+bool CircBufFull(struct CircBuf *cbuf)
 {
     // We determine "full" case by head being one position behind the tail
     // Note that this means we are wasting one space in the buffer!
     // Instead, you could have an "empty" flag and determine buffer full that way
-    return ((cbuf.head + 1) % cbuf.size) == cbuf.tail;
+    return ((cbuf->head + 1) % cbuf->size) == cbuf->tail;
 }
 
-int CircBufPut(CircBuf * cbuf, int8_t data)
+int CircBufPut(struct CircBuf * cbuf, int8_t regulatorValue, int8_t regarr[5])
 {
     int r = -1;
 
     if (cbuf) {
-        cbuf->buffer[cbuf->head] = data;
+        cbuf->buffer[cbuf->head].regulatorValue = regulatorValue;
+        for (int i = 0; i < 5; i++) {
+          cbuf->buffer[cbuf->head].regarr[i] = regarr[i];
+        }
         cbuf->head = (cbuf->head + 1) % cbuf->size;
 
         if (cbuf->head == cbuf->tail) {
@@ -110,7 +116,7 @@ int CircBufPut(CircBuf * cbuf, int8_t data)
     return r;
 }
 
-//int CircBufGet(CircBuf * cbuf, int8_t * data)
+//int CircBufGet(struct CircBuf * cbuf, int8_t * data)
 //{
 //    int r = -1;
 //
@@ -125,7 +131,7 @@ int CircBufPut(CircBuf * cbuf, int8_t data)
 //    return r;
 //}
 
-int CircBufLast(CircBuf *cbuf, int *data)
+int CircBufLast(struct CircBuf *cbuf, struct SensorState *data)
 {
     int r = -1;
     int prevstuff;
@@ -146,7 +152,7 @@ int CircBufLast(CircBuf *cbuf, int *data)
 
 /* INITIALIZE CIRCULAR BUFFER */
 
-void CircBufInit(CircBuf *cbuf)
+void CircBufInit(struct CircBuf *cbuf)
 {
     cbuf->size = TRACKED_SENSOR_STATES;
     cbuf->buffer = malloc(cbuf->size);
