@@ -83,6 +83,5 @@ void loop() {
 // long task
 if (millis() - longtimestamp   >= LONGTASKTIME ) {
     longtimestamp = longtimestamp + LONGTASKTIME ;
-    
   }
 }
